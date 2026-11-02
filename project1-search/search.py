@@ -92,10 +92,11 @@ def depthFirstSearch(problem: SearchProblem):
     # Store one predecessor per expanded state, rather than copying full paths.
     # Recording states when popped preserves the usual DFS/LIFO expansion order.
     start = problem.getStartState()
-    frontier = [(start, None, None)]
+    frontier = util.Stack()
+    frontier.push((start, None, None))
     parents = {}
 
-    while frontier:
+    while not frontier.isEmpty():
         state, previous, action = frontier.pop()
         if state in parents:
             continue
@@ -106,25 +107,25 @@ def depthFirstSearch(problem: SearchProblem):
 
         for successor, move, _ in problem.getSuccessors(state):
             if successor not in parents:
-                frontier.append((successor, state, move))
-
+                frontier.push((successor, state, move))
     return []
 
 def breadthFirstSearch(problem: SearchProblem):
     """Search the shallowest nodes in the search tree first."""
     start = problem.getStartState()
-    frontier = deque([start])
-    parents = {start: (None, None)}  # Also serves as the discovered set.
+    frontier = util.Queue()
+    frontier.push(start)
+    parents = {start: (None, None)}  # vừa truy vết vừa đóng vai trò tập đã duyệt
 
-    while frontier:
-        state = frontier.popleft()
+    while not frontier.isEmpty():
+        state = frontier.pop()
         if problem.isGoalState(state):
             return _reconstruct_path(parents, state)
 
         for successor, action, _ in problem.getSuccessors(state):
             if successor not in parents:
                 parents[successor] = (state, action)
-                frontier.append(successor)
+                frontier.push(successor)
 
     return []
 
