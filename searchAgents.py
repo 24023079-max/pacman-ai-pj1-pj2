@@ -394,45 +394,39 @@ def cornersHeuristic(state: Any, problem: CornersProblem):
     shortest path from the state to a goal of the problem; i.e.  it should be
     admissible (as well as consistent).
     """
-    corners = problem.corners # These are the corner coordinates
-    walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
+    
+    from itertools import permutations
 
-    position, visited = state
-    remaining = 15 ^ visited
-    if remaining == 0:
+    position, visited_mask = state
+
+    # Lay danh sach cac goc chua tham
+    remaining_corners = [
+        corner
+        for i, corner in enumerate(problem.corners)
+        if not (visited_mask & (1 << i))
+    ]
+
+    # Neu da tham du 4 goc thi heuristic bang 0
+    if not remaining_corners:
         return 0
 
-    # Maze distances account for walls and make this a *perfect* heuristic for
-    # four corners.  Four BFS distance arrays are reused for every A* state.
-    cache = getattr(problem, '_corner_heuristic_data', None)
-    if cache is None:
-        height = walls.height
-        maps = [_grid_distances(walls, corner) for corner in corners]
-        points = [x * height + y for x, y in corners]
-        between = [
-            [maps[i][points[j]] if maps[i][points[j]] >= 0 else float('inf')
-             for j in range(4)]
-            for i in range(4)
-        ]
+    # Ham tinh khoang cach Manhattan
+    def manhattan(p1, p2):
+        return abs(p1[0] - p2[0]) + abs(p1[1] - p2[1])
 
-        # tail[i][mask] = shortest route from corner i visiting every bit in mask.
-        tail = [[0] * 16 for _ in range(4)]
-        for mask in range(1, 16):
-            for i in range(4):
-                tail[i][mask] = min(
-                    between[i][j] + tail[j][mask ^ (1 << j)]
-                    for j in range(4) if mask & (1 << j)
-                )
-        cache = (maps, tail)
-        problem._corner_heuristic_data = cache
+    min_distance = float('inf')
 
-    maps, tail = cache
-    index = position[0] * walls.height + position[1]
-    return min(
-        (maps[i][index] + tail[i][remaining ^ (1 << i)]
-         if maps[i][index] >= 0 else float('inf'))
-        for i in range(4) if remaining & (1 << i)
-    )
+    # Thu tat ca thu tu tham cac goc con lai
+    for order in permutations(remaining_corners):
+        total = manhattan(position, order[0])
+
+        for i in range(len(order) - 1):
+            total += manhattan(order[i], order[i + 1])
+
+        min_distance = min(min_distance, total)
+
+    return min_distance
+
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
