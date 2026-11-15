@@ -91,43 +91,44 @@ def depthFirstSearch(problem: SearchProblem):
     """
     # Store one predecessor per expanded state, rather than copying full paths.
     # Recording states when popped preserves the usual DFS/LIFO expansion order.
-    start = problem.getStartState()
-    frontier = util.Stack()
-    frontier.push((start, None, None))
-    parents = {}
+    visited = set()
+    stack = util.Stack()
+    stack.push((problem.getStartState(), []))
 
-    while not frontier.isEmpty():
-        state, previous, action = frontier.pop()
-        if state in parents:
+    while not stack.isEmpty():
+        state, action = stack.pop()
+        if state in visited:
             continue
-        parents[state] = (previous, action)
+        visited.add(state)
 
         if problem.isGoalState(state):
-            return _reconstruct_path(parents, state)
+            return action
 
-        for successor, move, _ in problem.getSuccessors(state):
-            if successor not in parents:
-                frontier.push((successor, state, move))
+        for successor, move, stepcost in problem.getSuccessors(state):
+            if successor not in visited:
+                stack.push((successor, action + [move]))
     return []
 
 def breadthFirstSearch(problem: SearchProblem):
     """Search the shallowest nodes in the search tree first."""
-    start = problem.getStartState()
-    frontier = util.Queue()
-    frontier.push(start)
-    parents = {start: (None, None)}  # vừa truy vết vừa đóng vai trò tập đã duyệt
+    visited = set()
+    queue = util.Queue()
+    queue.push((problem.getStartState(), []))
+    
+    while not queue.isEmpty():
+        state, action = queue.pop()
+        if state in visited:
+            continue
+        visited.add(state)
 
-    while not frontier.isEmpty():
-        state = frontier.pop()
         if problem.isGoalState(state):
-            return _reconstruct_path(parents, state)
+            return action
 
-        for successor, action, _ in problem.getSuccessors(state):
-            if successor not in parents:
-                parents[successor] = (state, action)
-                frontier.push(successor)
-
+        for successor, move, stepcost in problem.getSuccessors(state):
+            if successor not in visited:
+                queue.push((successor, action + [move]))
     return []
+
 
 def uniformCostSearch(problem: SearchProblem):
     """Search the node of least total cost first."""

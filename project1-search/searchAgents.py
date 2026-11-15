@@ -629,14 +629,25 @@ class ClosestDotSearchAgent(SearchAgent):
         gameState.
         """
         # Here are some useful elements of the startState
-        startPosition = gameState.getPacmanPosition()
-        food = gameState.getFood()
-        walls = gameState.getWalls()
         problem = AnyFoodSearchProblem(gameState)
 
-        # Multi-goal BFS stops at the first food reached: shortest segment.
-        return search.breadthFirstSearch(problem)
+        visited = set()
+        queue = util.Queue()
+        queue.push((problem.getStartState(), []))
 
+        while not queue.isEmpty():
+            state, action = queue.pop()
+            if state in visited:
+                continue
+            visited.add(state)
+
+            if problem.isGoalState(state):
+                return action
+
+            for successor, move, stepcost in problem.getSuccessors(state):
+                if successor not in visited:
+                    queue.push((successor, action + [move]))
+        return []
 class AnyFoodSearchProblem(PositionSearchProblem):
     """
     A search problem for finding a path to any food.
