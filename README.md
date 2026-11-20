@@ -4,6 +4,8 @@
 
 Một dự án học tập sử dụng trò chơi **Pacman** để minh họa cách trí tuệ nhân tạo (AI) tìm đường, ra quyết định và ứng phó với các đối thủ. Tài liệu này dành cả cho người **chưa học lập trình**: từ tải dự án, mở cửa sổ lệnh, xem Pacman chạy cho đến tìm hiểu những thuật toán đằng sau trò chơi.
 
+**Báo cáo chi tiết:** - [(Report)](https://www.overleaf.com/project/6afab30ea6b4fbf99f5c5d55/share#29477d6e41dad48ef4c4815d3b540b876bb2bf3f23a1a0cf)
+
 Dự án gồm **hai bài độc lập**, dựa trên đề bài chính thức của UC Berkeley:
 
 | Phần | Câu hỏi chính | Nội dung | Các file trọng tâm |
@@ -31,11 +33,11 @@ Dự án gồm **hai bài độc lập**, dựa trên đề bài chính thức c
 
 **Khác biệt cốt lõi:** Project 1 chủ yếu *lập đường đi tới mục tiêu*; Project 2 *ra quyết định qua từng lượt khi có ma*. Pacman thắng/thua một ván không đồng nghĩa với thuật toán đúng/sai; hãy dùng cả `autograder.py` để kiểm tra.
 
-## 2. Máy tính cần chuẩn bị
+## 2.  Chuẩn bị
 
 ### 2.1. Phần mềm
 
-| Cần thiết? | Phần mềm | Dùng để làm gì? | Tải tại |
+| Độ ưu tiên | Phần mềm | Tác vụ | Link download |
 | --- | --- | --- | --- |
 | **Bắt buộc** | **Python 3** | Chạy Pacman và thuật toán | <https://www.python.org/downloads/> |
 | **Tùy chọn** | **Git** | Tải/đồng bộ dự án bằng `git clone` | <https://git-scm.com/downloads> |
@@ -45,7 +47,7 @@ Berkeley hướng dẫn dùng **Python 3.6 trở lên** và khuyến nghị **Py
 
 **Người dùng Windows:** Trong trình cài Python, nếu có tùy chọn **Add Python to PATH**, hãy bật trước khi cài.
 
-### 2.2. Kiểm tra Python đã cài chưa
+### 2.2. Kiểm tra Python
 
 Mở **PowerShell / Command Prompt** trên Windows hoặc **Terminal** trên macOS/Linux, gõ:
 
@@ -103,7 +105,6 @@ git clone https://github.com/TEN-TAI-KHOAN/TEN-REPOSITORY.git
 cd TEN-REPOSITORY
 ```
 
-**Không copy nguyên `TEN-TAI-KHOAN/TEN-REPOSITORY`:** đây là tên ví dụ, không phải URL GitHub đã được xác minh. Tên thư mục sau `cd` thường trùng với tên repository; nếu khác, mở thư mục đó bằng File Explorer/Finder và xem tên thực tế.
 
 ### Cấu trúc thư mục
 
@@ -151,7 +152,7 @@ Giải nén **vào hai thư mục riêng**, giữ nguyên các file hỗ trợ, 
 
 ### 4.1. Mở đúng thư mục và Terminal
 
-**Cách dễ nhất với VS Code:** mở VS Code → **File → Open Folder...** → chọn `project1-search` hoặc `project2-multiagent` → **Terminal → New Terminal**.
+* **Với VS Code:** mở VS Code → **File → Open Folder...** → chọn `project1-search` hoặc `project2-multiagent` → **Terminal → New Terminal**.
 
 **Không dùng VS Code trên Windows:** mở thư mục `project1-search` trong File Explorer, nhấp vào **thanh địa chỉ** phía trên, gõ `cmd`, nhấn Enter. Một cửa sổ dòng lệnh sẽ mở đúng tại thư mục đó. Làm tương tự với `project2-multiagent`.
 
@@ -209,7 +210,7 @@ python pacman.py -h
 
 Các tham số thường dùng:
 
-| Tham số | Ý nghĩa dễ hiểu | Ví dụ |
+| Tham số | Ý nghĩa  | Ví dụ |
 | --- | --- | --- |
 | `-p` | Chọn AI điều khiển Pacman | `-p ExpectimaxAgent` |
 | `-l` | Chọn bản đồ | `-l smallClassic` |
@@ -527,7 +528,7 @@ Có thể thay `q5` bằng `q1` đến `q5`.
 
 ## 9. Gợi ý thử nghiệm và đánh giá AI
 
-Nếu muốn xem AI nào hiệu quả, không nên chỉ nhìn vào một ván. Hãy so sánh trong cùng điều kiện: **bản đồ, loại ma, số ma, hàm đánh giá, số ván và độ sâu**.
+Nếu muốn xem AI nào hiệu quả, hãy so sánh trong cùng điều kiện: **bản đồ, loại ma, số ma, hàm đánh giá, số ván và độ sâu**.
 
 Ví dụ, chạy Alpha-Beta với 50 ván:
 
@@ -554,93 +555,7 @@ Muốn lặp lại thí nghiệm với chuỗi ngẫu nhiên có thể tái hi�
 python pacman.py -p ExpectimaxAgent -g DirectionalGhost -k 2 -l smallClassic -a evalFn=better,depth=3 -n 50 -q -f
 ```
 
-`-f` **không làm AI thông minh hơn**; nó chỉ cố định hạt giống ngẫu nhiên. Khi đánh giá chất lượng một Agent, nên thử thêm những lần chạy với chuỗi ngẫu nhiên khác. Chênh lệch vài trận thắng trên 10 hoặc 50 ván chưa đủ để kết luận thuật toán này luôn tốt hơn thuật toán kia.
-
----
-
-## 10. Các lỗi thường gặp và cách xử lý
-
-<details>
-<summary><strong>1. Gõ python nhưng máy báo không nhận diện lệnh</strong></summary>
-
-- Kiểm tra Python đã cài chưa.
-- Windows: thử `py -3 --version`, sau đó dùng `py -3 pacman.py ...`.
-- macOS/Linux: thử `python3 --version`, sau đó dùng `python3 pacman.py ...`.
-- Nếu vẫn lỗi, cài Python theo mục 2 và mở lại Terminal.
-</details>
-
-<details>
-<summary><strong>2. Báo không tìm thấy pacman.py</strong></summary>
-
-Bạn đang ở sai thư mục. Mở thư mục `project1-search` hoặc `project2-multiagent` trong File Explorer/VS Code rồi mở Terminal tại đó. Gõ `dir` (Windows) hoặc `ls` (macOS/Linux) để kiểm tra có file `pacman.py`.
-</details>
-
-<details>
-<summary><strong>3. Báo ModuleNotFoundError: No module named game / util / pacman</strong></summary>
-
-Bạn có thể thiếu file hỗ trợ hoặc đã chạy bằng cách tách riêng một file `.py`. Cần giải nén **toàn bộ** bộ mã nguồn đúng project, giữ các file cùng cấp với `pacman.py`; không chỉ nhấp đúp `multiAgents.py`.
-</details>
-
-<details>
-<summary><strong>4. Không hiện cửa sổ Pacman / lỗi Tkinter</strong></summary>
-
-Chạy `python -m tkinter`. Nếu lỗi, hãy cài bản Python có hỗ trợ Tkinter. Trên Ubuntu/Debian có thể cần gói hệ thống `python3-tk`. Với mục đích chấm bài, thử `python autograder.py --no-graphics` ngay trong thư mục project.
-</details>
-
-<details>
-<summary><strong>5. `util.raiseNotDefined()` hoặc `*** YOUR CODE HERE ***`</strong></summary>
-
-Phần thuật toán bạn gọi vẫn chưa triển khai. Với bản Project 1 đã đối chiếu, đây là tình trạng có thật ở một số hàm. Không phải lỗi cài Python. Cần hoàn thiện đúng các hàm theo đề trước khi chạy những lệnh tương ứng.
-</details>
-
-<details>
-<summary><strong>6. Báo không tìm thấy Agent, ví dụ DirectionalExpectimaxAgent</strong></summary>
-
-Kiểm tra tên class trong `multiAgents.py`, viết đúng chữ hoa/chữ thường, và chắc chắn đã dùng **bản có chứa class mở rộng**. `DirectionalExpectimaxAgent` không thuộc bộ khung Project 2 chính thức.
-</details>
-
-<details>
-<summary><strong>7. Pacman chạy chậm, đứng suy nghĩ lâu</strong></summary>
-
-Các thuật toán tìm kiếm có thể cần duyệt rất nhiều trạng thái. Với Project 2, thử `depth=2`; với Project 1, thử `tinyMaze` hoặc `mediumMaze`. Dùng `-q` để giảm chi phí đồ họa khi chạy nhiều ván, nhưng việc tắt đồ họa không làm giảm số trạng thái mà thuật toán phải xét.
-</details>
-
-<details>
-<summary><strong>8. Pacman thua nhiều dù autograder đã đạt điểm cao</strong></summary>
-
-Điều này có thể bình thường. Một thuật toán đúng theo bài tập không nhất thiết thắng với mọi loại ma/bản đồ. `DirectionalGhost` khó hơn ma ngẫu nhiên trong nhiều tình huống. Hãy so sánh trên đủ số ván và xem lại độ sâu/hàm đánh giá.
-</details>
-
-<details>
-<summary><strong>9. `git clone` báo repository not found hoặc permission denied</strong></summary>
-
-Kiểm tra đã copy đúng HTTPS URL từ nút **Code**, repository có tồn tại và tài khoản GitHub của bạn đã được cấp quyền nếu là repository riêng tư. Không dùng nguyên đường dẫn ví dụ `TEN-TAI-KHOAN/TEN-REPOSITORY`.
-</details>
-
-<details>
-<summary><strong>10. Chấm nhầm project hoặc kết quả kỳ lạ sau khi chép file</strong></summary>
-
-Không trộn file hai project. Khôi phục riêng bộ `search.zip` cho Project 1 và `multiagent.zip` cho Project 2; chỉ đưa file thuật toán tương ứng vào đúng bộ, với quyền sử dụng hợp lệ.
-</details>
-
----
-
-## 11. Checklist trước khi chia sẻ repository cho người khác
-
-Người quản lý dự án nên kiểm tra:
-
-- [ ] Repository có `README.md` này và có **hai thư mục độc lập**.
-- [ ] Mỗi project có `pacman.py`, `game.py`, `util.py`, `layouts/`, `autograder.py` và các file hỗ trợ cần thiết.
-- [ ] Các file Project 1 (`search.py`, `searchAgents.py`) **không còn phần bắt buộc chưa triển khai** nếu muốn công bố là chạy đầy đủ.
-- [ ] `python autograder.py --no-graphics` đã được thử **riêng từng project**.
-- [ ] Đã thử ít nhất một lệnh chạy đồ họa trên hệ điều hành mục tiêu.
-- [ ] Các class/hàm giới thiệu trong README thực sự có trong code đi kèm.
-- [ ] Đã thay URL GitHub minh họa bằng đường dẫn thật (nếu muốn ghi URL trực tiếp).
-- [ ] Quyền chia sẻ mã nguồn và lời giải phù hợp với điều khoản Berkeley và quy định học thuật.
-
-**Lưu ý:** Các ô trên là checklist cần xác nhận; việc có README không đồng nghĩa chúng đã được hoàn thành.
-
-## 12. Nguồn tham khảo và bản quyền
+## 10. Nguồn tham khảo và bản quyền
 
 Dự án sử dụng khung Pacman và nội dung bài tập học thuật của **UC Berkeley — CS188: Introduction to Artificial Intelligence**.
 
