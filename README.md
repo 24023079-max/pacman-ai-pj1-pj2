@@ -17,7 +17,7 @@ Dự án gồm **hai bài độc lập**, dựa trên đề bài chính thức c
 
 > **Quan trọng — hai project phải nằm ở hai thư mục riêng.** Tài liệu CS188 Fall 2025 yêu cầu sử dụng bộ mã nguồn Project 2 độc lập với Project 1. Không gộp hoặc chép đè bừa các file hỗ trợ (`pacman.py`, `game.py`, `autograder.py`...) giữa hai bộ.
 >
-> **Quan trọng — bản quyền và liêm chính học thuật.** Phần đầu các file Berkeley quy định chỉ được sử dụng/mở rộng cho mục đích giáo dục khi **không phân phối hoặc công bố lời giải**, giữ thông báo bản quyền và ghi rõ nguồn UC Berkeley. Không đăng công khai repository chứa lời giải hoàn chỉnh nếu chưa có quyền phù hợp. Với repository riêng tư, chỉ cấp quyền cho người được phép truy cập. Xem [Nguồn và bản quyền](#12-nguồn-tham-khảo-và-bản-quyền).
+> **Quan trọng — bản quyền và liêm chính học thuật.** Phần đầu các file Berkeley quy định chỉ được sử dụng/mở rộng cho mục đích giáo dục khi **không phân phối hoặc công bố lời giải**, giữ thông báo bản quyền và ghi rõ nguồn UC Berkeley. Không đăng công khai repository chứa lời giải hoàn chỉnh nếu chưa có quyền phù hợp. Với repository riêng tư, chỉ cấp quyền cho người được phép truy cập. Xem [Nguồn và bản quyền](#11-nguồn-tham-khảo-và-bản-quyền).
 
 ---
 
@@ -43,7 +43,7 @@ Dự án gồm **hai bài độc lập**, dựa trên đề bài chính thức c
 | **Tùy chọn** | **Git** | Tải/đồng bộ dự án bằng `git clone` | <https://git-scm.com/downloads> |
 | **Tùy chọn, khuyên dùng** | **Visual Studio Code** | Mở thư mục và gõ lệnh dễ hơn | <https://code.visualstudio.com/> |
 
-Berkeley hướng dẫn dùng **Python 3.6 trở lên** và khuyến nghị **Python 3.9** cho bộ môn này. Nếu mới cài, Python 3.9 là lựa chọn bám sát hướng dẫn chính thức. Các project 1–2 thường sử dụng thư viện có sẵn trong Python; **không cần tự ý `pip install` nhiều gói**. Chế độ đồ họa dùng **Tkinter**, vốn thường đi cùng bản Python cài từ python.org trên Windows/macOS.
+Trong tài liệu CS188 Fall 2025, Berkeley yêu cầu **Python 3.6 trở lên** và khuyến nghị Python 3.9. Tuy nhiên, **Python 3.9** đã hết hỗ trợ bảo mật từ ngày 31/10/2025. Nếu cài máy mới vào năm 2026, nên chọn **Python 3.11 hoặc 3.12** (còn được hỗ trợ) và chạy autograder để xác nhận tương thích với bộ mã của bạn; không mặc nhiên coi mọi phiên bản mới đều đã được Berkeley kiểm thử. Nếu cần tái hiện đúng môi trường của học kỳ Fall 2025, hãy dùng một môi trường riêng cho phiên bản Python cũ. Project 1–2 chủ yếu dùng thư viện chuẩn nên **không cần tự ý `pip install` nhiều gói**. Chế độ đồ họa sử dụng **Tkinter**, thường đi cùng bản Python cài từ python.org trên Windows/macOS.
 
 **Người dùng Windows:** Trong trình cài Python, nếu có tùy chọn **Add Python to PATH**, hãy bật trước khi cài.
 
@@ -55,7 +55,7 @@ Mở **PowerShell / Command Prompt** trên Windows hoặc **Terminal** trên mac
 python --version
 ```
 
-Nếu xuất hiện ví dụ `Python 3.9.x` là đã nhận diện được Python. Nếu báo không tìm thấy lệnh, thử:
+Nếu xuất hiện ví dụ `Python 3.11.x` là đã nhận diện được Python. Nếu báo không tìm thấy lệnh, thử:
 
 ```bash
 # Windows
@@ -263,7 +263,7 @@ Project 1 yêu cầu Pacman tìm đường đến một vị trí cố định, 
 | **Q6** | 3 | **Corners Heuristic:** ước lượng quãng đường qua các góc còn lại | `cornersHeuristic()` — `searchAgents.py` |
 | **Q7** | 4 | **Food Heuristic:** tìm đường thu thập toàn bộ chấm thức ăn với A\* | `foodHeuristic()` — `searchAgents.py` |
 | **Q8** | 3 | **Closest Dot:** liên tục tìm chấm thức ăn gần nhất (nhanh, không bảo đảm lộ trình tổng ngắn nhất) | `findPathToClosestDot()` và `AnyFoodSearchProblem.isGoalState()` — `searchAgents.py` |
-
+**Điểm thưởng Q7:** Tổng điểm chuẩn của Project 1 là **25**. Riêng Q7 có **1 điểm thưởng tùy chọn**: trên bản đồ `trickySearch`, heuristic không âm, không tầm thường, nhất quán và mở rộng **không quá 7.000 nodes** có thể đạt **5/4 điểm**. Như vậy, điểm lý thuyết tối đa là **26/25** nếu tính thưởng (cần vượt qua các kiểm tra hợp lệ khác của autograder).
 **Nói đơn giản:** DFS thích khám phá sâu; BFS tìm ít bước; UCS xem mỗi bước “tốn bao nhiêu”; A\* dùng thêm dự đoán để tìm nhanh hơn. Bài 5–8 biến các thuật toán đó thành những nhiệm vụ Pacman khó hơn.
 
 ### 6.2. Giải thích file `search.py`
@@ -526,6 +526,17 @@ Có thể thay `q5` bằng `q1` đến `q5`.
 
 **Không trộn autograder Project 1 với Project 2:** Hai bộ có bài kiểm thử và yêu cầu khác nhau; việc chép file từ thư mục này sang thư mục kia có thể làm kiểm thử sai.
 
+### 8.3. Trạng thái kiểm thử thực tế
+
+**Chưa có log autograder chính thức kèm README này.** Các ví dụ và phân tích thuật toán không phải là bằng chứng đã đạt điểm tối đa. Sau khi chạy trên chính bộ mã được công bố, hãy cập nhật bảng dưới đây:
+
+| Bộ bài | Lệnh kiểm tra | Kết quả hiện có | Điểm xác nhận |
+| --- | --- | --- | --- |
+| Project 1 | `python autograder.py --no-graphics` | Chưa cung cấp log | Chưa xác nhận /25 (+1 thưởng Q7 nếu đạt) |
+| Project 2 | `python autograder.py --no-graphics` | Chưa cung cấp log | Chưa xác nhận /25 |
+
+Nếu chia sẻ kết quả, nên ghi thêm phiên bản Python, ngày chạy, các câu PASS/FAIL và thời gian thử nghiệm. Chỉ điền **25/25** sau khi bộ chấm thực sự trả về số điểm đó.
+
 ## 9. Gợi ý thử nghiệm và đánh giá AI
 
 Nếu muốn xem AI nào hiệu quả, hãy so sánh trong cùng điều kiện: **bản đồ, loại ma, số ma, hàm đánh giá, số ván và độ sâu**.
@@ -554,8 +565,26 @@ Muốn lặp lại thí nghiệm với chuỗi ngẫu nhiên có thể tái hi�
 ```bash
 python pacman.py -p ExpectimaxAgent -g DirectionalGhost -k 2 -l smallClassic -a evalFn=better,depth=3 -n 50 -q -f
 ```
+## 10. Các lỗi thường gặp và cách xử lý
 
-## 10. Nguồn tham khảo và bản quyền
+### 10.1. Báo không tìm thấy lệnh `python`
+
+- **Windows:** thử `py -3 --version` rồi thay `python` bằng `py -3` trong các lệnh. Nếu vẫn lỗi, kiểm tra lại Python đã cài và đường dẫn `PATH`.
+- **macOS/Linux:** thử `python3 --version` rồi thay `python` bằng `python3`.
+- Nếu có nhiều bản Python, hãy kiểm tra lệnh nào đang được dùng trước khi cài thêm thư viện hoặc chạy autograder.
+
+### 10.2. Báo `can't open file 'pacman.py'` hoặc không thấy `autograder.py`
+
+Bạn đang ở sai thư mục hoặc chưa giải nén đủ mã nguồn. Chuyển vào **thư mục Project 1 hoặc Project 2 chứa chính file đó**, rồi kiểm tra bằng `dir` (Windows) hoặc `ls` (macOS/Linux). Không chạy lệnh game từ thư mục gốc chỉ chứa `README.md`.
+
+### 10.3. Báo `No module named tkinter` hoặc không mở được cửa sổ đồ họa
+
+Kiểm tra giao diện bằng:
+
+```bash
+python -m tkinter
+
+## 11. Nguồn tham khảo và bản quyền
 
 Dự án sử dụng khung Pacman và nội dung bài tập học thuật của **UC Berkeley — CS188: Introduction to Artificial Intelligence**.
 
@@ -563,6 +592,7 @@ Dự án sử dụng khung Pacman và nội dung bài tập học thuật của 
 - [CS188 Fall 2025 — Project 2: Multi-Agent Search](https://inst.eecs.berkeley.edu/~cs188/archive/fa25/projects/proj2/)
 - [CS188 Fall 2025 — Project 0: Python, Setup & Autograder](https://inst.eecs.berkeley.edu/~cs188/archive/fa25/projects/proj0/)
 - [Pacman Projects / Berkeley AI](http://ai.berkeley.edu/)
+- [Python 3.9 end of life (PEP 596)](https://peps.python.org/pep-0596/)
 
 **Ghi nhận tác giả:** Mã nguồn Pacman AI Projects được phát triển tại UC Berkeley; các tác giả/nhóm phát triển được nêu trong header của các file gốc, gồm John DeNero, Dan Klein và nhóm hỗ trợ autograder. Cần **giữ nguyên** các thông báo bản quyền và ghi nhận tác giả trong file nguồn.
 

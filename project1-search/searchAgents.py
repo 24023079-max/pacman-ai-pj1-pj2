@@ -380,58 +380,44 @@ def _grid_distances(walls, source):
 
     return distances
 
-
 def cornersHeuristic(state: Any, problem: CornersProblem):
-    """
-    A heuristic for the CornersProblem that you defined.
-
-      state:   The current search state
-               (a data structure you chose in your search problem)
-
-      problem: The CornersProblem instance for this layout.
-
-    This function should always return a number that is a lower bound on the
-    shortest path from the state to a goal of the problem; i.e.  it should be
-    admissible (as well as consistent).
-    """
-    corners = problem.corners # These are the corner coordinates
-    walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
-
+    """Consistent Manhattan-distance heuristic for four corners."""
     position, visited = state
-    remaining = 15 ^ visited
+    remaining = 0b1111 & ~visited
+
     if remaining == 0:
         return 0
 
-    # Maze distances account for walls and make this a *perfect* heuristic for
-    # four corners.  Four BFS distance arrays are reused for every A* state.
-    cache = getattr(problem, '_corner_heuristic_data', None)
-    if cache is None:
-        height = walls.height
-        maps = [_grid_distances(walls, corner) for corner in corners]
-        points = [x * height + y for x, y in corners]
-        between = [
-            [maps[i][points[j]] if maps[i][points[j]] >= 0 else float('inf')
-             for j in range(4)]
-            for i in range(4)
+    corners = problem.corners
+    tail = getattr(problem, '_manhattan_tail', None)
+
+    if tail is None:
+        distances = [
+            [
+                abs(a[0] - b[0]) + abs(a[1] - b[1])
+                for b in corners
+            ]
+            for a in corners
         ]
 
-        # tail[i][mask] = shortest route from corner i visiting every bit in mask.
         tail = [[0] * 16 for _ in range(4)]
+
         for mask in range(1, 16):
             for i in range(4):
                 tail[i][mask] = min(
-                    between[i][j] + tail[j][mask ^ (1 << j)]
-                    for j in range(4) if mask & (1 << j)
+                    distances[i][j] + tail[j][mask ^ (1 << j)]
+                    for j in range(4)
+                    if mask & (1 << j)
                 )
-        cache = (maps, tail)
-        problem._corner_heuristic_data = cache
 
-    maps, tail = cache
-    index = position[0] * walls.height + position[1]
+        problem._manhattan_tail = tail
+
     return min(
-        (maps[i][index] + tail[i][remaining ^ (1 << i)]
-         if maps[i][index] >= 0 else float('inf'))
-        for i in range(4) if remaining & (1 << i)
+        abs(position[0] - corner[0])
+        + abs(position[1] - corner[1])
+        + tail[i][remaining ^ (1 << i)]
+        for i, corner in enumerate(corners)
+        if remaining & (1 << i)
     )
 
 class AStarCornersAgent(SearchAgent):

@@ -89,8 +89,7 @@ def depthFirstSearch(problem: SearchProblem):
     print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
-    # Store one predecessor per expanded state, rather than copying full paths.
-    # Recording states when popped preserves the usual DFS/LIFO expansion order.
+    
     visited = set()
     stack = util.Stack()
     stack.push((problem.getStartState(), []))
@@ -109,25 +108,28 @@ def depthFirstSearch(problem: SearchProblem):
                 stack.push((successor, action + [move]))
     return []
 
+
 def breadthFirstSearch(problem: SearchProblem):
     """Search the shallowest nodes in the search tree first."""
-    visited = set()
+    start = problem.getStartState()
+
+    visited = {start}
     queue = util.Queue()
-    queue.push((problem.getStartState(), []))
-    
+    queue.push((start, []))
+
     while not queue.isEmpty():
-        state, action = queue.pop()
-        if state in visited:
-            continue
-        visited.add(state)
+        state, actions = queue.pop()
 
         if problem.isGoalState(state):
-            return action
+            return actions
 
         for successor, move, stepcost in problem.getSuccessors(state):
             if successor not in visited:
-                queue.push((successor, action + [move]))
+                visited.add(successor)
+                queue.push((successor, actions + [move]))
+
     return []
+
 
 
 def uniformCostSearch(problem: SearchProblem):
@@ -159,21 +161,20 @@ def _reconstruct_path(parents, goal):
 
 
 def _best_first_search(problem, heuristic):
-    """Dijkstra/A* with a binary heap, best-g updates and lazy stale removal.
-
-    The single records table holds both g costs and predecessor links.  A
-    cheaper path re-opens a state, so A* also supports inconsistent heuristics.
-    Step costs must be non-negative, as required by UCS/A*.
-    """
+    """UCS/A* graph search with best-g updates and stale-entry removal."""
     start = problem.getStartState()
-    tie_breaker = count()
-    heappush_fn, heappop_fn = heappush, heappop
-    frontier = [(heuristic(start, problem), next(tie_breaker), 0, start)]
-    records = {start: (0, None, None)}  # state -> (best_g, parent, action)
 
-    while frontier:
-        _, _, g, state = heappop_fn(frontier)
-        if g != records[state][0]:  # Old heap entry, superseded by better g.
+    frontier = util.PriorityQueue()
+    frontier.push((start, 0), heuristic(start, problem))
+
+    # state -> (best_g, parent, action)
+    records = {start: (0, None, None)}
+
+    while not frontier.isEmpty():
+        state, g = frontier.pop()
+
+        # Skip outdated entries.
+        if g != records[state][0]:
             continue
 
         if problem.isGoalState(state):
@@ -189,10 +190,11 @@ def _best_first_search(problem, heuristic):
         for successor, action, step_cost in problem.getSuccessors(state):
             new_g = g + step_cost
             old_record = records.get(successor)
+
             if old_record is None or new_g < old_record[0]:
                 records[successor] = (new_g, state, action)
                 priority = new_g + heuristic(successor, problem)
-                heappush_fn(frontier, (priority, next(tie_breaker), new_g, successor))
+                frontier.push((successor, new_g), priority)
 
     return []
 
