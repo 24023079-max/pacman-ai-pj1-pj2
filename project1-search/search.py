@@ -167,13 +167,13 @@ def _best_first_search(problem, heuristic):
     frontier = util.PriorityQueue()
     frontier.push((start, 0), heuristic(start, problem))
 
-    # state -> (best_g, parent, action)
+    
     records = {start: (0, None, None)}
 
     while not frontier.isEmpty():
         state, g = frontier.pop()
 
-        # Skip outdated entries.
+        
         if g != records[state][0]:
             continue
 

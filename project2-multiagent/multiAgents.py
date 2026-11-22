@@ -44,8 +44,7 @@ def _nearestFoodPathDistance(position, food, walls):
     return float('inf')
 
 
-# Bộ nhớ đệm: mỗi bố cục dùng chung bảng khoảng cách để không chạy BFS
-# lặp lại ở hàng nghìn nút lá của Expectimax.
+
 _MAZE_DISTANCE_CACHE = {}
 
 
@@ -54,10 +53,10 @@ def _distancesFrom(position, walls):
     key = id(walls)
     entry = _MAZE_DISTANCE_CACHE.get(key)
     if entry is None or entry[0] is not walls:
-        # Giới hạn số bố cục lưu để bộ nhớ không tăng vô hạn.
+        
         if len(_MAZE_DISTANCE_CACHE) >= 8:
             _MAZE_DISTANCE_CACHE.pop(next(iter(_MAZE_DISTANCE_CACHE)))
-        # Giữ tham chiếu walls để tránh trùng id nếu bố cục cũ bị giải phóng.
+        
         entry = (walls, {})
         _MAZE_DISTANCE_CACHE[key] = entry
 
@@ -110,8 +109,7 @@ class ReflexAgent(Agent):
 
         score = float(successor.getScore())
 
-        # Thưởng khi ăn thức ăn ngay lập tức; ưu tiên quét hết bản đồ.
-        # BFS tính khoảng cách đường đi thực, không xuyên tường trong mê cung.
+       
         eaten = currentGameState.getNumFood() - len(remaining_food)
         score += 55.0 * eaten - 5.0 * len(remaining_food)
         if remaining_food:
@@ -120,7 +118,7 @@ class ReflexAgent(Agent):
                 score -= 1.6 * food_distance
                 score += 10.0 / (food_distance + 1.0)
 
-        # Tránh ma nguy hiểm; chỉ đuổi ma đang hoảng loạn khi còn đủ thời gian.
+        
         active_ghost_nearby = False
         for ghost in ghosts:
             distance = manhattanDistance(position, ghost.getPosition())
@@ -137,13 +135,13 @@ class ReflexAgent(Agent):
                     score -= 6.0
                 active_ghost_nearby |= distance < 6
 
-        # Viên sức mạnh có giá trị hơn khi có ma nguy hiểm ở gần.
+        
         score -= 5.0 * len(capsules)
         if capsules and active_ghost_nearby:
             capsule_distance = min(manhattanDistance(position, p) for p in capsules)
             score += 18.0 / (capsule_distance + 1.0)
 
-        # Hạn chế đứng yên khi còn hành động có ích.
+        
         if action == Directions.STOP:
             score -= 12.0
 
@@ -159,7 +157,7 @@ class MultiAgentSearchAgent(Agent):
     """Lớp cơ sở cho ba tác nhân Minimax, Alpha-Beta và Expectimax."""
 
     def __init__(self, evalFn='scoreEvaluationFunction', depth='2'):
-        self.index = 0  # Pacman luôn có chỉ số tác nhân bằng 0.
+        self.index = 0  
         self.evaluationFunction = util.lookup(evalFn, globals())
         self.depth = int(depth)
 
@@ -173,7 +171,7 @@ class MinimaxAgent(MultiAgentSearchAgent):
         max_depth = self.depth
 
         def value(state, agent, depth):
-            # Chỉ tăng độ sâu khi hết lượt tất cả ma và trở lại lượt Pacman.
+            
             if depth == max_depth or state.isWin() or state.isLose():
                 return evaluate(state)
             actions = state.getLegalActions(agent)
@@ -195,7 +193,7 @@ class MinimaxAgent(MultiAgentSearchAgent):
                 result = min(result, value(child, next_agent, next_depth))
             return result
 
-        # Giữ nguyên thứ tự hành động: autograder kiểm tra các trạng thái được mở rộng.
+       
         if max_depth <= 0 or gameState.isWin() or gameState.isLose():
             return Directions.STOP
         actions = gameState.getLegalActions(0)
@@ -236,7 +234,7 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
                 for action in actions:
                     child = state.generateSuccessor(agent, action)
                     result = max(result, value(child, next_agent, next_depth, alpha, beta))
-                    # Chỉ cắt khi > beta; KHÔNG cắt khi bằng beta (quy định của Berkeley).
+                    
                     if result > beta:
                         return result
                     alpha = max(alpha, result)
@@ -246,7 +244,6 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
             for action in actions:
                 child = state.generateSuccessor(agent, action)
                 result = min(result, value(child, next_agent, next_depth, alpha, beta))
-                # Tương tự, chỉ cắt khi < alpha; KHÔNG cắt khi bằng nhau.
                 if result < alpha:
                     return result
                 beta = min(beta, result)
@@ -263,7 +260,6 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
         best_action, best_value = actions[0], float('-inf')
         alpha, beta = float('-inf'), float('inf')
 
-        # KHÔNG đổi thứ tự nước đi; truyền alpha giữa các nhánh tại gốc.
         for action in actions:
             child = gameState.generateSuccessor(0, action)
             score = value(child, next_agent, next_depth, alpha, beta)
@@ -297,7 +293,6 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
                     result = max(result, value(child, next_agent, next_depth))
                 return result
 
-            # Ma chọn ngẫu nhiên đều giữa các nước hợp lệ, không lấy MIN.
             total = 0.0
             for action in actions:
                 child = state.generateSuccessor(agent, action)
@@ -339,10 +334,8 @@ def betterEvaluationFunction(currentGameState: GameState):
     capsules = currentGameState.getCapsules()
     distances = _distancesFrom(position, currentGameState.getWalls())
 
-    # Trừ điểm theo số thức ăn còn lại để Pacman chủ động dọn bản đồ.
     score -= 25.0 * len(food_positions)
     if food_positions:
-        # Khoảng cách mê cung chuẩn, tra cứu O(1) cho mỗi viên thức ăn.
         closest = float('inf')
         density = 0.0
         for food_pos in food_positions:
@@ -355,7 +348,6 @@ def betterEvaluationFunction(currentGameState: GameState):
             score -= 1.0 * closest
             score += 12.0 / (closest + 1.0) + 1.8 * density
 
-    # Ưu tiên viên sức mạnh khi ma nguy hiểm xuất hiện gần Pacman.
     score -= 35.0 * len(capsules)
     active_ghost_nearby = False
     for ghost in currentGameState.getGhostStates():
@@ -364,7 +356,7 @@ def betterEvaluationFunction(currentGameState: GameState):
         scared_time = ghost.scaredTimer
 
         if scared_time > distance + 1:
-            # Chỉ săn ma khi hiệu lực của viên sức mạnh đủ dài.
+            
             score += 450.0 / (distance + 1.0)
         else:
             active_ghost_nearby |= distance < 6
@@ -383,7 +375,5 @@ def betterEvaluationFunction(currentGameState: GameState):
 
     return score
 
-
-# Giữ bí danh better để chọn evalFn=better từ dòng lệnh.
 better = betterEvaluationFunction
 
