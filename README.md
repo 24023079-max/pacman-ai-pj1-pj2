@@ -68,7 +68,6 @@ Kiểm tra thư viện giao diện (tùy chọn):
 python -m tkinter
 ```
 
-Nếu hiện một cửa sổ thử Tkinter thì có thể đóng cửa sổ này rồi tiếp tục. Nếu báo `No module named tkinter`, xem phần [Xử lý lỗi](#10-các-lỗi-thường-gặp-và-cách-xử-lý).
 
 ## 3. Tải dự án về máy
 
